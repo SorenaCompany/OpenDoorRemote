@@ -82,6 +82,7 @@ const char index_html[] PROGMEM = R"rawliteral(
   {
     if (this.readyState == 4 && this.status == 200)
     {
+    document.getElementById(variable).style.backgroundColor = 'red';
     document.getElementById(variable).innerHTML = this.responseText;
     }
   };
@@ -127,7 +128,7 @@ void openDoor()  // function to load default webpage and send HTML code to clien
   digitalWrite(5, LOW);
   delay(700);
   digitalWrite(5, HIGH);
-  server.send_P(200, "text/plain", "Button Text Changed");
+  server.send_P(200, "text/plain", "Door Opened...");
    // document.getElementById("door1").innerHTML = "Changed....";
 
 }
