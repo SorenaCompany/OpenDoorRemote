@@ -4,10 +4,7 @@
 
 ESP8266WebServer server;
 const char* ssid = "MobinNet-4ACD";
-const char* password = "6Qvhmcse";
-IPAddress localIP(192, 168, 2, 3);
-IPAddress gateway(192, 168, 2, 3);
-IPAddress subnet(255, 255, 255, 0);
+const char* password = "6Qvhmcsee";
 
 const char* PARAM_INPUT_1 = "input1";
 unsigned long resetInterval = 24 * 60 * 60 * 1000;  // Set the reset interval to 24 hours (in milliseconds)
@@ -67,11 +64,9 @@ const char index_html[] PROGMEM = R"rawliteral(
     	<label for="input1">باز کردن درب خانه هوشمند</label>
 			<button id="door1" onclick="sendData('door1')">Click Me!!</button>
 		</div>
-	
-
   <script>
+      var URL,variable;
   function sendData(butn){
-    var URL,variable;
     if(butn=='door1')
     {
       URL='OpenDoor';
@@ -82,22 +77,24 @@ const char index_html[] PROGMEM = R"rawliteral(
   {
     if (this.readyState == 4 && this.status == 200)
     {
-    document.getElementById(variable).style.backgroundColor = 'red';
-    document.getElementById(variable).innerHTML = this.responseText;
+      var obj=JSON.parse(this.responseText);
+    document.getElementById(variable).style.backgroundColor = obj.btnColor;
+    document.getElementById(variable).innerHTML = obj.btnText;
     }
   };
   xhr.open('GET', URL, true);
   xhr.send();
   }
-  </script>
+  setInterval(reload,4000);
+  function reload(){
+    document.getElementById(variable).style.backgroundColor = "#4CAF50";
+    document.getElementById(variable).innerHTML = "Click Me!!" ;
+  }
+  </script> 
 </body>
-
-
   </html>)rawliteral";
-
-
-
 const uint32_t WATCHDOG_TIMEOUT = 86400000;
+ String json;
 void setup() {
   Serial.begin(115200);
   lastResetTime = millis();
@@ -128,15 +125,20 @@ void openDoor()  // function to load default webpage and send HTML code to clien
   digitalWrite(5, LOW);
   delay(700);
   digitalWrite(5, HIGH);
-  server.send_P(200, "text/plain", "Door Opened...");
-   // document.getElementById("door1").innerHTML = "Changed....";
-
+   json = JsonConvert("Door Opened", "red");
+  server.send(200, "text/json", json);
+  // document.getElementById("door1").innerHTML = "Changed....";
 }
+
+String JsonConvert(String btnText, String btnColor) {
+  json = "{\"btnText\":\"" + btnText + "\",";
+  json += " \"btnColor\": \"" + btnColor + "\"}";
+  return json;
+}
+
 void loop() {
   server.handleClient();
   resetESP();
-   // server.send_P(200, "text/plain", "Click meee");
-
 }
 
 void resetESP() {
