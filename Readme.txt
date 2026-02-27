@@ -1,1 +1,2 @@
-این پروژه برای باز کردن درب حیاط استفاده می ش.د که توسط یک NodeMcu و یک رله میشه مدارش رو هم بست
+This Project has made for open my door from outsite by connecting to my web app in arduino and when you push the 
+Click Me !! button, it sends a signal to arduino and then arduino with a relay can send signal to my door that will open it
