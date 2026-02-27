@@ -98,8 +98,8 @@ const uint32_t WATCHDOG_TIMEOUT = 86400000;
 void setup() {
   Serial.begin(115200);
   lastResetTime = millis();
-  pinMode(5, OUTPUT);
-  digitalWrite(5, HIGH);
+  pinMode(D1, OUTPUT);
+  digitalWrite(D1, HIGH);
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
@@ -122,9 +122,9 @@ void handleRoot() {
 void openDoor()  // function to load default webpage and send HTML code to client
 {
   Serial.println("inside openDoor");
-  digitalWrite(5, LOW);
+  digitalWrite(D1, LOW);
   delay(700);
-  digitalWrite(5, HIGH);
+  digitalWrite(D1, HIGH);
    json = JsonConvert("Door Opened", "red");
   server.send(200, "text/json", json);
   // document.getElementById("door1").innerHTML = "Changed....";
